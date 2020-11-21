@@ -47,6 +47,7 @@ dependencies {
 
     // Testing Libs
     testImplementation 'junit:junit:4.13.1'
+    testImplementation "org.koin:koin-test:$koin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "android.arch.core:core-testing:$lifecycle_version"
@@ -56,4 +57,7 @@ dependencies {
 
     // Parse JSON
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Koin Dependency Injection
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 }
