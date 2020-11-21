@@ -11,4 +11,6 @@
     <dimen name="medium_text">18sp</dimen>
     <dimen name="large_text">28sp</dimen>
     <dimen name="very_large_text">40sp</dimen>
+
+    <dimen name="poster_corner_radius">10dp</dimen>
 </resources>

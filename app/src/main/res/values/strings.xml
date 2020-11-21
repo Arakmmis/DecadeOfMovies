@@ -3,4 +3,5 @@
 
     <string name="search">Search</string>
     <string name="search_hint">Movies, Actors, or Genres</string>
+    <string name="no_results">No Results</string>
 </resources>
