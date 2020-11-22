@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
@@ -14,12 +13,11 @@ import com.movies.decade.uimodels.MoviesUiModel
 import kotlinx.android.synthetic.main.activity_movies_list.*
 import kotlinx.android.synthetic.main.view_loading.*
 import kotlinx.android.synthetic.main.view_no_results.*
+import org.koin.android.ext.android.inject
 
 class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
 
-    private val viewModel: MoviesListViewModel by lazy {
-        ViewModelProviders.of(this).get(MoviesListViewModel::class.java)
-    }
+    private val viewModel: MoviesListViewModel by inject()
 
     private lateinit var adapter: MoviesAdapter
 
@@ -33,7 +31,9 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
     }
 
     private fun subscribeToTextChanges() {
-        etSearch.doOnTextChanged { query, _, _, _ -> query?.toString()?.let { viewModel.searchMovies(query = it) } }
+        etSearch.doOnTextChanged { query, _, _, _ ->
+            query?.toString()?.let { viewModel.searchMovies(query = it) }
+        }
     }
 
     private fun initRecyclerView() {

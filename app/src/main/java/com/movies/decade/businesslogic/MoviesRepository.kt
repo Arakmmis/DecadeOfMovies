@@ -11,6 +11,10 @@ import java.lang.reflect.Type
 class MoviesRepository(private val context: Context) {
 
     fun getMovies(): List<RetrievedMovies.Movie> {
+        return getMoviesFromFile()
+    }
+
+    private fun getMoviesFromFile(): List<RetrievedMovies.Movie> {
         val jsonFileString: String =
             getJsonFromAssets(context, MOVIES_FILE_NAME)
 
