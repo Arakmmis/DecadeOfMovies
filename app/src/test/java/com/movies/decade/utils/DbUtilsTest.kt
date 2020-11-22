@@ -1,6 +1,6 @@
 package com.movies.decade.utils
 
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import org.junit.Test
 
 class DbUtilsTest {
@@ -51,14 +51,14 @@ class DbUtilsTest {
         assert(checkRatingOrder(moviesSortedByRating))
     }
 
-    private fun getDiffYears(movies: List<DbMovie>): Set<Int> {
+    private fun getDiffYears(movies: List<Movie>): Set<Int> {
         val years = HashSet<Int>()
         movies.forEach { movies -> years.add(movies.year) }
 
         return years.toSortedSet()
     }
 
-    private fun checkRatingOrder(movies: List<DbMovie>): Boolean {
+    private fun checkRatingOrder(movies: List<Movie>): Boolean {
         movies.forEachIndexed { index, movie ->
             if (index != 0 && index != movies.size - 1) {
                 if (movie.rating < movies[index - 1].rating

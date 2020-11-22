@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import kotlinx.android.synthetic.main.view_movie.view.*
 import kotlinx.android.synthetic.main.view_year_header.view.*
 
-class MoviesAdapter(private var items: List<AdapterItem<DbMovie>>, private val listener: Listener) :
+class MoviesAdapter(private var items: List<AdapterItem<Movie>>, private val listener: Listener) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,13 +37,13 @@ class MoviesAdapter(private var items: List<AdapterItem<DbMovie>>, private val l
 
     override fun getItemViewType(position: Int) = items[position].viewType
 
-    fun updateMovies(items: List<AdapterItem<DbMovie>>) {
+    fun updateMovies(items: List<AdapterItem<Movie>>) {
         this.items = items
         notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindMovie(movie: DbMovie, listener: Listener) = with(itemView) {
+        fun bindMovie(movie: Movie, listener: Listener) = with(itemView) {
             if (movie.imagesUrls?.isNotEmpty() == true)
                 Glide.with(context).load(movie.imagesUrls[0]).into(ivMoviePoster)
 
@@ -54,12 +54,12 @@ class MoviesAdapter(private var items: List<AdapterItem<DbMovie>>, private val l
             }
         }
 
-        fun bindYear(movie: DbMovie) = with(itemView) {
+        fun bindYear(movie: Movie) = with(itemView) {
             tvYear.text = movie.year.toString()
         }
     }
 
     interface Listener {
-        fun onMovieSelected(movie: DbMovie)
+        fun onMovieSelected(movie: Movie)
     }
 }

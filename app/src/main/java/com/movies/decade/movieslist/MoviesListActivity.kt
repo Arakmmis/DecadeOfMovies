@@ -7,7 +7,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.movieslist.adapter.MoviesAdapter
 import com.movies.decade.uimodels.MoviesUiModel
 import kotlinx.android.synthetic.main.activity_movies_list.*
@@ -71,7 +71,7 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
         rvMovies.visibility = View.GONE
     }
 
-    private fun showMovies(movies: List<AdapterItem<DbMovie>>) {
+    private fun showMovies(movies: List<AdapterItem<Movie>>) {
         llNoResults.visibility = View.GONE
         llLoading.visibility = View.GONE
         rvMovies.visibility = View.VISIBLE
@@ -79,7 +79,7 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
         adapter.updateMovies(movies)
     }
 
-    override fun onMovieSelected(movie: DbMovie) {
+    override fun onMovieSelected(movie: Movie) {
         TODO("Not yet implemented")
     }
 }

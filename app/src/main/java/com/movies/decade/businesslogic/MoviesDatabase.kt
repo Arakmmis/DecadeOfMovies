@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.utils.TypeConverter
 
-@Database(entities = [DbMovie::class], version = 1, exportSchema = false)
+@Database(entities = [Movie::class], version = 1, exportSchema = false)
 @TypeConverters(TypeConverter::class)
 abstract class MoviesDatabase : RoomDatabase() {
 

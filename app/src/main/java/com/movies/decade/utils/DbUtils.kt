@@ -1,6 +1,6 @@
 package com.movies.decade.utils
 
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import java.util.*
 import kotlin.collections.set
 import kotlin.random.Random
@@ -34,8 +34,8 @@ val dummyMovieImages = listOf(
     "https://cdn.shopify.com/s/files/1/0185/4636/products/IRONGIANT_POSTER_upd_ee164942-12aa-4f96-a339-8cd745e83b1e_800x.jpg?v=1571606999"
 )
 
-fun createMovie(): DbMovie {
-    return DbMovie(
+fun createMovie(): Movie {
+    return Movie(
         Random.nextInt(1, 100),
         dummyMovieTitles.shuffled().first(),
         Random.nextInt(1990, 2020),
@@ -46,8 +46,8 @@ fun createMovie(): DbMovie {
     )
 }
 
-fun getMovieList(size: Int): List<DbMovie> {
-    val movieList = ArrayList<DbMovie>()
+fun getMovieList(size: Int): List<Movie> {
+    val movieList = ArrayList<Movie>()
 
     for (i in 0 until size)
         movieList.add(createMovie())
@@ -55,22 +55,22 @@ fun getMovieList(size: Int): List<DbMovie> {
     return movieList
 }
 
-fun sortMoviesByYear(movies: List<DbMovie>): List<DbMovie> {
+fun sortMoviesByYear(movies: List<Movie>): List<Movie> {
     val map = getMoviesByYear(movies)
-    val list = mutableListOf<DbMovie>()
-    map.forEach { entry: Map.Entry<Int, ArrayList<DbMovie>> ->
+    val list = mutableListOf<Movie>()
+    map.forEach { entry: Map.Entry<Int, ArrayList<Movie>> ->
         entry.value.forEach { movie -> list.add(movie) }
     }
 
     return list
 }
 
-fun getMoviesByYear(movies: List<DbMovie>): Map<Int, ArrayList<DbMovie>> {
-    val yearMap = TreeMap<Int, ArrayList<DbMovie>>()
+fun getMoviesByYear(movies: List<Movie>): Map<Int, ArrayList<Movie>> {
+    val yearMap = TreeMap<Int, ArrayList<Movie>>()
 
     movies.forEach { dbMovie ->
-        val list: ArrayList<DbMovie> =
-            yearMap[dbMovie.year] ?: ArrayList<DbMovie>()
+        val list: ArrayList<Movie> =
+            yearMap[dbMovie.year] ?: ArrayList<Movie>()
 
         list.add(dbMovie)
 
@@ -80,7 +80,7 @@ fun getMoviesByYear(movies: List<DbMovie>): Map<Int, ArrayList<DbMovie>> {
     return yearMap
 }
 
-fun sortMoviesByRating(movies: List<DbMovie>): List<DbMovie> {
+fun sortMoviesByRating(movies: List<Movie>): List<Movie> {
     if (movies.isEmpty() || movies.size == 1) return movies
 
     val middle = movies.size / 2
@@ -90,10 +90,10 @@ fun sortMoviesByRating(movies: List<DbMovie>): List<DbMovie> {
     return merge(sortMoviesByRating(left), sortMoviesByRating(right))
 }
 
-private fun merge(left: List<DbMovie>, right: List<DbMovie>): List<DbMovie> {
+private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     var indexLeft = 0
     var indexRight = 0
-    val newList: MutableList<DbMovie> = mutableListOf()
+    val newList: MutableList<Movie> = mutableListOf()
 
     while (indexLeft < left.size && indexRight < right.size) {
         if (left[indexLeft].compareByRating(right[indexRight]) == -1) {

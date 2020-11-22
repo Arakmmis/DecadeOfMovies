@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.movies.decade.businesslogic.models.DbMovie
+import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.utils.createMovie
 import com.movies.decade.utils.getMovieList
 import com.movies.decade.utils.sortMoviesByRating
@@ -28,8 +28,6 @@ class MoviesDatabaseTest {
     private var moviesDao: MoviesDao? = null
     private var moviesDb: MoviesDatabase? = null
 
-    private val observer: Observer<List<DbMovie>> = mock()
-
     @Before
     fun setup() {
         moviesDb = Room.inMemoryDatabaseBuilder(
@@ -38,13 +36,10 @@ class MoviesDatabaseTest {
         ).build()
 
         moviesDao = moviesDb?.moviesDao()
-
-        moviesDao?.getAllMovies()?.observeForever(observer)
     }
 
     @After
     fun tearDown() {
-        moviesDao?.removeAllMovies()
         moviesDb?.close()
         validateMockitoUsage()
     }
@@ -73,28 +68,55 @@ class MoviesDatabaseTest {
     fun getAllMoviesAscendingByYearAndRating() {
         moviesDao?.insertMovie(*getMovieList(5).toTypedArray())
 
-        verify(observer).onChanged(
-            sortMoviesByYear(
-                sortMoviesByRating(
-                    moviesDao?.getAllMovies()?.value ?: emptyList()
-                )
-            )
-        )
+        val queriedMovies = moviesDao?.getAllMovies()
+
+        val observer: Observer<List<Movie>> = mock()
+        queriedMovies?.observeForever(observer)
+
+        verify(observer).onChanged(queriedMovies?.value)
+
+        if (queriedMovies?.value != null) {
+            val sortedMovies = sortMoviesByYear(sortMoviesByRating(queriedMovies.value!!))
+
+            queriedMovies.value?.forEachIndexed { index, movie ->
+                assert(movie.id == sortedMovies[index].id)
+            }
+        }
     }
 
     @Test
-    fun getQueriedMovie() {
+    fun getQueriedMovies() {
         val query = "the"
-        val previousSize = 5
 
-        moviesDao?.insertMovie(*getMovieList(previousSize).toTypedArray())
+        moviesDao?.insertMovie(*getMovieList(5).toTypedArray())
 
         moviesDao?.getQueriedMovies(query)?.value?.forEach { assert(it.title.contains(query)) }
     }
 
     @Test
+    fun checkQueriedMoviesSorted() {
+        val query = "da"
+
+        moviesDao?.insertMovie(*getMovieList(20).toTypedArray())
+
+        val observer: Observer<List<Movie>> = mock()
+
+        val queriedMovies = moviesDao?.getQueriedMovies(query)
+        queriedMovies?.observeForever(observer)
+
+        verify(observer).onChanged(queriedMovies?.value)
+
+        if (queriedMovies?.value != null) {
+            val sortedMovies = sortMoviesByYear(sortMoviesByRating(queriedMovies.value!!))
+
+            queriedMovies.value?.forEachIndexed { index, movie ->
+                assert(movie.id == sortedMovies[index].id)
+            }
+        }
+    }
+
+    @Test
     fun deleteAllMovies() {
         moviesDao?.removeAllMovies()
-        verify(observer).onChanged(emptyList())
     }
 }
