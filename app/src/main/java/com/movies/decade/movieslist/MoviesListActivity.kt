@@ -3,6 +3,7 @@ package com.movies.decade.movieslist
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.movies.decade.R
@@ -26,8 +27,13 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movies_list)
 
+        subscribeToTextChanges()
         initRecyclerView()
         subscribeToMovies()
+    }
+
+    private fun subscribeToTextChanges() {
+        etSearch.doOnTextChanged { query, _, _, _ -> query?.toString()?.let { viewModel.searchMovies(query = it) } }
     }
 
     private fun initRecyclerView() {

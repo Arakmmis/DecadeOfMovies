@@ -7,4 +7,4 @@ data class DbMovie(
     val genres: List<String>,
     val rating: Int,
     val imagesUrls: List<String>? = null
-) : Movie
+)
