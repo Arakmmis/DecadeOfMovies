@@ -51,6 +51,17 @@ class DbUtilsTest {
         assert(checkRatingOrder(moviesSortedByRating))
     }
 
+    @Test
+    fun `assert movies list is trimmed to 5 movies per year`() {
+        val movies = getMovieList(20)
+        val moviesByYear = getMoviesByYear(movies)
+        val sortedMap = removeExcessMoviesFromYear(moviesByYear)
+
+        sortedMap.entries.forEach { entry ->
+            assert(entry.value.size <= MAX_MOVIES_PER_YEAR)
+        }
+    }
+
     private fun getDiffYears(movies: List<Movie>): Set<Int> {
         val years = HashSet<Int>()
         movies.forEach { movies -> years.add(movies.year) }

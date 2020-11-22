@@ -34,6 +34,8 @@ val dummyMovieImages = listOf(
     "https://cdn.shopify.com/s/files/1/0185/4636/products/IRONGIANT_POSTER_upd_ee164942-12aa-4f96-a339-8cd745e83b1e_800x.jpg?v=1571606999"
 )
 
+const val MAX_MOVIES_PER_YEAR = 5
+
 fun createMovie(): Movie {
     return Movie(
         Random.nextInt(1, 100),
@@ -116,4 +118,14 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     }
 
     return newList
+}
+
+fun removeExcessMoviesFromYear(movies: Map<Int, List<Movie>>): Map<Int, List<Movie>> {
+    val sortedMap = TreeMap<Int, List<Movie>>()
+
+    movies.entries.forEach { entry ->
+        sortedMap[entry.key] = entry.value.take(MAX_MOVIES_PER_YEAR)
+    }
+
+    return sortedMap
 }
