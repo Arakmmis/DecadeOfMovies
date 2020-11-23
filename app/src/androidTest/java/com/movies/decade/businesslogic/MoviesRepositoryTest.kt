@@ -18,13 +18,8 @@ class MoviesRepositoryTest {
 
     private val moviesRepository: MoviesRepository by inject(MoviesRepository::class.java)
 
-    @After
-    fun tearDown() {
-        stopKoin()
-    }
-
     @Test
     fun checkGetMoviesReturnNonEmptyList() {
-        assert(moviesRepository.getMoviesFromFile(MOVIES_FILE_NAME).value?.isNotEmpty() ?: false)
+        assert(moviesRepository.getMoviesFromFile().value?.isNotEmpty() ?: false)
     }
 }
