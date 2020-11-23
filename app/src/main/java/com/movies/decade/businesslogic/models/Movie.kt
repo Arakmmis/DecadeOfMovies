@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.movies.decade.utils.compareAlphabetically
+import com.movies.decade.utils.compareAlphabeticallyTo
 
 @Entity(tableName = "movie")
 data class Movie(
@@ -30,7 +30,7 @@ data class Movie(
         return when {
             this.rating > other.rating -> 1
             this.rating < other.rating -> -1
-            else -> this.title.compareAlphabetically(other.title)
+            else -> this.title.compareAlphabeticallyTo(other.title)
         }
     }
 }
