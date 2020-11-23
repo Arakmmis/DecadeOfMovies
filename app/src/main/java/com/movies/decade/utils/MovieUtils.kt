@@ -12,7 +12,9 @@ fun toAdapterList(movies: List<Movie>): List<AdapterItem<Movie>> {
 
     movies.forEach { movie ->
         if (previousYear != movie.year) {
-            val item = AdapterItem(movie, AdapterItem.TYPE_YEAR)
+            val dummyMovie = Movie(0, "", movie.year, null, null, 0, null)
+
+            val item = AdapterItem(dummyMovie, AdapterItem.TYPE_YEAR)
             adapterList.add(item)
 
             val movieItem = AdapterItem(movie, AdapterItem.TYPE_MOVIE)

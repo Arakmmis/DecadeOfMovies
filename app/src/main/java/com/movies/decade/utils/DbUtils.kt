@@ -36,7 +36,7 @@ val dummyMovieImages = listOf(
 
 const val MAX_MOVIES_PER_YEAR = 5
 
-fun createMovie(): Movie {
+fun createMovie(withImages: Boolean): Movie {
     return Movie(
         Random.nextInt(1, 100),
         dummyMovieTitles.shuffled().first(),
@@ -44,7 +44,7 @@ fun createMovie(): Movie {
         dummyMovieCast.shuffled().subList(0, Random.nextInt(1, 5)),
         dummyMovieGenres.shuffled().subList(0, Random.nextInt(1, 5)),
         Random.nextInt(1, 10),
-        dummyMovieImages.shuffled().subList(0, Random.nextInt(1, 4))
+        if (withImages) dummyMovieImages.shuffled().subList(0, Random.nextInt(1, 4)) else null
     )
 }
 
@@ -52,34 +52,15 @@ fun getMovieList(size: Int): List<Movie> {
     val movieList = ArrayList<Movie>()
 
     for (i in 0 until size)
-        movieList.add(createMovie())
+        movieList.add(createMovie(true))
 
     return movieList
 }
 
-fun sortMoviesByYear(movies: List<Movie>): List<Movie> {
-    val map = getMoviesByYear(movies)
-    val list = mutableListOf<Movie>()
-    map.forEach { entry: Map.Entry<Int, ArrayList<Movie>> ->
-        entry.value.forEach { movie -> list.add(movie) }
-    }
+fun sortMovies(movies: List<Movie>): List<Movie> {
+    if (movies.isEmpty()) return emptyList()
 
-    return list
-}
-
-fun getMoviesByYear(movies: List<Movie>): Map<Int, ArrayList<Movie>> {
-    val yearMap = TreeMap<Int, ArrayList<Movie>>()
-
-    movies.forEach { dbMovie ->
-        val list: ArrayList<Movie> =
-            yearMap[dbMovie.year] ?: ArrayList<Movie>()
-
-        list.add(dbMovie)
-
-        yearMap[dbMovie.year] = list
-    }
-
-    return yearMap
+    return sortMoviesByYear(sortMoviesByRating(movies))
 }
 
 fun sortMoviesByRating(movies: List<Movie>): List<Movie> {
@@ -98,7 +79,7 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     val newList: MutableList<Movie> = mutableListOf()
 
     while (indexLeft < left.size && indexRight < right.size) {
-        if (left[indexLeft].compareByRating(right[indexRight]) == -1) {
+        if (left[indexLeft].compareByRating(right[indexRight]) == 1) {
             newList.add(left[indexLeft])
             indexLeft++
         } else {
@@ -118,6 +99,32 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     }
 
     return newList
+}
+
+fun sortMoviesByYear(movies: List<Movie>): List<Movie> {
+    val map = removeExcessMoviesFromYear(getMoviesByYear(movies))
+    val list = mutableListOf<Movie>()
+
+    map.forEach { entry: Map.Entry<Int, List<Movie>> ->
+        entry.value.forEach { movie -> list.add(movie) }
+    }
+
+    return list.reversed()
+}
+
+fun getMoviesByYear(movies: List<Movie>): Map<Int, ArrayList<Movie>> {
+    val yearMap = TreeMap<Int, ArrayList<Movie>>()
+
+    movies.forEach { dbMovie ->
+        val list: ArrayList<Movie> =
+            yearMap[dbMovie.year] ?: ArrayList<Movie>()
+
+        list.add(dbMovie)
+
+        yearMap[dbMovie.year] = list
+    }
+
+    return yearMap
 }
 
 fun removeExcessMoviesFromYear(movies: Map<Int, List<Movie>>): Map<Int, List<Movie>> {

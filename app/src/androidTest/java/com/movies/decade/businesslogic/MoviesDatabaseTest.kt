@@ -46,7 +46,7 @@ class MoviesDatabaseTest {
 
     @Test
     fun insertMovie() {
-        val movie = createMovie()
+        val movie = createMovie(true)
         val ids = moviesDao?.insertMovie(movie)
 
         assert(ids?.isNotEmpty() ?: false)
@@ -54,7 +54,7 @@ class MoviesDatabaseTest {
 
     @Test
     fun insertSameMovie() {
-        val movie = createMovie()
+        val movie = createMovie(true)
         val previousSize = moviesDao?.getQueriedMovies(movie.title)?.value?.size
 
         moviesDao?.insertMovie(movie)
@@ -113,10 +113,5 @@ class MoviesDatabaseTest {
                 assert(movie.id == sortedMovies[index].id)
             }
         }
-    }
-
-    @Test
-    fun deleteAllMovies() {
-        moviesDao?.removeAllMovies()
     }
 }

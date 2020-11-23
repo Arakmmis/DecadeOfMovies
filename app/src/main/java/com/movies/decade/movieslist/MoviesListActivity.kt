@@ -53,13 +53,15 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
     }
 
     private fun render(uiModel: MoviesUiModel) {
-        if (uiModel.movies == null)
+        if (uiModel.movies == null) {
             showNoResults()
+            return
+        }
 
         if (!uiModel.hasList)
             showLoading()
         else
-            uiModel.movies?.let { showMovies(it) } ?: showNoResults()
+            showMovies(uiModel.movies)
     }
 
     private fun showNoResults() {

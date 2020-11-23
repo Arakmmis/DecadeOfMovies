@@ -13,7 +13,7 @@ interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(vararg movie: Movie): List<Long>
 
-    @Query("SELECT * FROM movie ORDER BY year, rating ASC")
+    @Query("SELECT * FROM movie ORDER BY rating, year DESC")
     fun getAllMovies(): LiveData<List<Movie>>
 
     @Query("SELECT * FROM movie " +
@@ -21,9 +21,7 @@ interface MoviesDao {
             "year LIKE '%' || :query  || '%' OR " +
             "rating LIKE '%' || :query  || '%' OR " +
             "`cast` LIKE '%' || :query  || '%' OR " +
-            "genres LIKE '%' || :query  || '%' ORDER BY year, rating ASC")
+            "genres LIKE '%' || :query  || '%' ORDER BY rating, year DESC")
     fun getQueriedMovies(query: String): LiveData<List<Movie>>
 
-    @Query("DELETE FROM movie")
-    fun removeAllMovies()
 }

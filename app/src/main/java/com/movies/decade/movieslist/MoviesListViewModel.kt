@@ -31,6 +31,31 @@ class MoviesListViewModel : ViewModel() {
     }
 
     fun searchMovies(query: String) {
-        moviesManager.query.value = query
+        if (query.isEmpty())
+            moviesManager.query.value = query
+
+        pushState(filterSearchByQuery(query))
+    }
+
+    private fun filterSearchByQuery(query: String): List<AdapterItem<Movie>>? {
+        val queriedMovies = moviesList?.filter { item ->
+            item.value.title.toLowerCase().contains(query.toLowerCase())
+                    || item.value.year.toString().toLowerCase().contains(query.toLowerCase())
+                    || isQueryInList(query, item.value.genres)
+                    || isQueryInList(query, item.value.cast)
+        }
+
+        return if (queriedMovies.isNullOrEmpty())
+            null
+        else
+            queriedMovies
+    }
+
+    private fun isQueryInList(query: String, list: List<String>?): Boolean {
+        return list?.any { it.toLowerCase().contains(query) } ?: false
+    }
+
+    private fun pushState(movies: List<AdapterItem<Movie>>?) {
+        viewState.value = MoviesUiModel(movies, movies?.isNotEmpty() == true)
     }
 }
