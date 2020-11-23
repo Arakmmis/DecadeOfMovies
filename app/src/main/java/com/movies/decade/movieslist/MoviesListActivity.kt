@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.movieslist.adapter.MoviesAdapter
-import com.movies.decade.uimodels.MoviesUiModel
+import com.movies.decade.statemodels.MoviesUiState
 import kotlinx.android.synthetic.main.activity_movies_list.*
 import kotlinx.android.synthetic.main.view_loading.*
 import kotlinx.android.synthetic.main.view_no_results.*
-import kotlinx.coroutines.delay
 import org.koin.android.ext.android.inject
 
 class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
@@ -52,16 +49,16 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
         }
     }
 
-    private fun render(uiModel: MoviesUiModel) {
-        if (uiModel.movies == null) {
+    private fun render(uiState: MoviesUiState) {
+        if (uiState.movies == null) {
             showNoResults()
             return
         }
 
-        if (!uiModel.hasList)
+        if (!uiState.hasList)
             showLoading()
         else
-            showMovies(uiModel.movies)
+            showMovies(uiState.movies)
     }
 
     private fun showNoResults() {

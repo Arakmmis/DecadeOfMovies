@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.movies.decade.businesslogic.MoviesManager
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
-import com.movies.decade.uimodels.MoviesUiModel
+import com.movies.decade.statemodels.MoviesUiState
+import com.movies.decade.statemodels.MoviesViewModelState
+import com.movies.decade.utils.isDeviceOnline
 import com.movies.decade.utils.toAdapterList
 import org.koin.java.KoinJavaComponent.inject
 
@@ -16,15 +18,15 @@ class MoviesListViewModel : ViewModel() {
 
     private var moviesList: List<AdapterItem<Movie>>? = null
 
-    val viewState: MutableLiveData<MoviesUiModel> =
+    val viewState: MutableLiveData<MoviesUiState> =
         Transformations.switchMap(moviesManager.queriedMovies) { movies ->
             moviesList = toAdapterList(movies)
 
-            val newState = MutableLiveData<MoviesUiModel>()
-            newState.value = MoviesUiModel(moviesList, moviesList?.isNotEmpty() == true)
+            val newState = MutableLiveData<MoviesUiState>()
+            newState.value = MoviesUiState(moviesList, moviesList?.isNotEmpty() == true)
 
             newState
-        } as MutableLiveData<MoviesUiModel>
+        } as MutableLiveData<MoviesUiState>
 
     init {
         searchMovies("")
@@ -32,7 +34,7 @@ class MoviesListViewModel : ViewModel() {
 
     fun searchMovies(query: String) {
         if (query.isEmpty())
-            moviesManager.query.value = query
+            moviesManager.viewModelState.value = MoviesViewModelState(query, isDeviceOnline())
 
         pushState(filterSearchByQuery(query))
     }
@@ -56,6 +58,6 @@ class MoviesListViewModel : ViewModel() {
     }
 
     private fun pushState(movies: List<AdapterItem<Movie>>?) {
-        viewState.value = MoviesUiModel(movies, movies?.isNotEmpty() == true)
+        viewState.value = MoviesUiState(movies, movies?.isNotEmpty() == true)
     }
 }
