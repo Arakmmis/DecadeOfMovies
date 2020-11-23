@@ -72,8 +72,8 @@ class DbUtilsTest {
     private fun checkRatingOrder(movies: List<Movie>): Boolean {
         movies.forEachIndexed { index, movie ->
             if (index != 0 && index != movies.size - 1) {
-                if (movie.rating < movies[index - 1].rating
-                    || movie.rating > movies[index + 1].rating
+                if (movie.rating > movies[index - 1].rating
+                    || movie.rating < movies[index + 1].rating
                 )
                     return false
             }

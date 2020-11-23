@@ -6,10 +6,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.movies.decade.businesslogic.models.Movie
-import com.movies.decade.utils.createMovie
-import com.movies.decade.utils.getMovieList
-import com.movies.decade.utils.sortMoviesByRating
-import com.movies.decade.utils.sortMoviesByYear
+import com.movies.decade.utils.*
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.validateMockitoUsage
 import com.nhaarman.mockito_kotlin.verify
@@ -65,7 +62,7 @@ class MoviesDatabaseTest {
     }
 
     @Test
-    fun getAllMoviesAscendingByYearAndRating() {
+    fun getAllMoviesDescendingByYearAndRating() {
         moviesDao?.insertMovie(*getMovieList(5).toTypedArray())
 
         val queriedMovies = moviesDao?.getAllMovies()
@@ -76,7 +73,7 @@ class MoviesDatabaseTest {
         verify(observer).onChanged(queriedMovies?.value)
 
         if (queriedMovies?.value != null) {
-            val sortedMovies = sortMoviesByYear(sortMoviesByRating(queriedMovies.value!!))
+            val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
                 assert(movie.id == sortedMovies[index].id)
@@ -107,7 +104,7 @@ class MoviesDatabaseTest {
         verify(observer).onChanged(queriedMovies?.value)
 
         if (queriedMovies?.value != null) {
-            val sortedMovies = sortMoviesByYear(sortMoviesByRating(queriedMovies.value!!))
+            val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
                 assert(movie.id == sortedMovies[index].id)
