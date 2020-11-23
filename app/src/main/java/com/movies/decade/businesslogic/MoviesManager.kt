@@ -2,9 +2,7 @@ package com.movies.decade.businesslogic
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.statemodels.MoviesViewModelState
 import com.movies.decade.utils.getFlickrImageUrl
@@ -22,18 +20,16 @@ class MoviesManager(context: Context) {
 
     var viewModelState = MutableLiveData<MoviesViewModelState>()
 
-    val queriedMovies: MutableLiveData<List<Movie>> = Transformations.switchMap(viewModelState) {
-        val movies: List<Movie>? = moviesDao.getQueriedMovies(it.query).value
-        getMoviesOrPopulate(movies, it.loadImages)
-    } as MutableLiveData<List<Movie>>
+    fun search(state: MoviesViewModelState) {
+        var movies: List<Movie>? = moviesDao.getQueriedMovies(state.query ?: "").value
 
-    private fun getMoviesOrPopulate(
-        movies: List<Movie>?,
-        loadImage: Boolean
-    ): LiveData<List<Movie>> {
-        val mutableData = MutableLiveData<List<Movie>>()
+        movies = getMoviesOrPopulate(movies, state.loadImages ?: false)
 
-        if (movies == null) {
+        viewModelState.value = MoviesViewModelState(state.query, movies, state.loadImages)
+    }
+
+    private fun getMoviesOrPopulate(movies: List<Movie>?, loadImage: Boolean): List<Movie> {
+        return if (movies == null) {
             var sortedMovies = getSortedMoviesFromFile()
 
             if (loadImage)
@@ -41,11 +37,9 @@ class MoviesManager(context: Context) {
 
             populateDb(sortedMovies)
 
-            mutableData.value = sortedMovies
+            sortedMovies
         } else
-            mutableData.value = movies
-
-        return mutableData
+            movies
     }
 
     private fun getSortedMoviesFromFile(): List<Movie> {

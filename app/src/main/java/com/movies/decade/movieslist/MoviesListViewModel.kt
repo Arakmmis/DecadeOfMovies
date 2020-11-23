@@ -19,8 +19,8 @@ class MoviesListViewModel : ViewModel() {
     private var moviesList: List<AdapterItem<Movie>>? = null
 
     val viewState: MutableLiveData<MoviesUiState> =
-        Transformations.switchMap(moviesManager.queriedMovies) { movies ->
-            moviesList = toAdapterList(movies)
+        Transformations.switchMap(moviesManager.viewModelState) {
+            moviesList = toAdapterList(it.movies)
 
             val newState = MutableLiveData<MoviesUiState>()
             newState.value = MoviesUiState(moviesList, moviesList?.isNotEmpty() == true)
@@ -33,8 +33,8 @@ class MoviesListViewModel : ViewModel() {
     }
 
     fun searchMovies(query: String) {
-        if (query.isEmpty())
-            moviesManager.viewModelState.value = MoviesViewModelState(query, isDeviceOnline())
+        if (query.isEmpty() && moviesList == null)
+            moviesManager.search(MoviesViewModelState(query, null, isDeviceOnline()))
 
         pushState(filterSearchByQuery(query))
     }

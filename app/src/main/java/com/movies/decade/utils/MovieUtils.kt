@@ -138,7 +138,8 @@ fun removeExcessMoviesFromYear(movies: Map<Int, List<Movie>>): Map<Int, List<Mov
     return sortedMap
 }
 
-fun toAdapterList(movies: List<Movie>): List<AdapterItem<Movie>> {
+fun toAdapterList(movies: List<Movie>?): List<AdapterItem<Movie>>? {
+    if (movies == null) return null
     if (movies.isEmpty()) return emptyList()
 
     val adapterList = ArrayList<AdapterItem<Movie>>()

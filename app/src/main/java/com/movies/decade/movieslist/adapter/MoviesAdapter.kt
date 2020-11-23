@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
@@ -44,10 +45,12 @@ class MoviesAdapter(private var items: List<AdapterItem<Movie>>, private val lis
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMovie(movie: Movie, listener: Listener) = with(itemView) {
-
             try {
-                Glide.with(context).load(movie.imagesUrls?.get(0))
-                    .placeholder(R.drawable.ic_movie_poster_placeholder).into(ivMoviePoster)
+                Glide.with(context)
+                    .load(movie.imagesUrls?.get(0))
+                    .placeholder(R.drawable.ic_movie_poster_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivMoviePoster)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
