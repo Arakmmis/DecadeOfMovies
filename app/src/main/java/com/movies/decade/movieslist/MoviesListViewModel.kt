@@ -1,31 +1,36 @@
 package com.movies.decade.movieslist
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.movies.decade.businesslogic.MoviesDao
-import com.movies.decade.businesslogic.MoviesDatabase
-import com.movies.decade.businesslogic.MoviesRepository
+import com.movies.decade.businesslogic.MoviesManager
+import com.movies.decade.businesslogic.models.AdapterItem
+import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.uimodels.MoviesUiModel
+import com.movies.decade.utils.toAdapterList
 import org.koin.java.KoinJavaComponent.inject
 
-class MoviesListViewModel(context: Context) : ViewModel() {
+class MoviesListViewModel : ViewModel() {
 
-    val viewState: MutableLiveData<MoviesUiModel> = MutableLiveData()
+    private val moviesManager: MoviesManager by inject(MoviesManager::class.java)
 
-    val moviesRepository: MoviesRepository by inject(MoviesRepository::class.java)
-    val moviesDao: MoviesDao by lazy {
-        MoviesDatabase.getDatabase(context).moviesDao()
-    }
+    private var moviesList: List<AdapterItem<Movie>>? = null
+
+    val viewState: MutableLiveData<MoviesUiModel> =
+        Transformations.switchMap(moviesManager.queriedMovies) { movies ->
+            moviesList = toAdapterList(movies)
+
+            val newState = MutableLiveData<MoviesUiModel>()
+            newState.value = MoviesUiModel(moviesList, moviesList?.isNotEmpty() == true)
+
+            newState
+        } as MutableLiveData<MoviesUiModel>
 
     init {
-        val uiModel = MoviesUiModel(emptyList(), false)
-        viewState.value = uiModel
-
         searchMovies("")
     }
 
     fun searchMovies(query: String) {
-
+        moviesManager.query.value = query
     }
 }

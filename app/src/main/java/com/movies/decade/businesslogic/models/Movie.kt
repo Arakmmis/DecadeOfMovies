@@ -8,7 +8,7 @@ import com.movies.decade.utils.compareAlphabetically
 
 @Entity(tableName = "movie")
 data class Movie(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @SerializedName("title")
     @Expose
     val title: String,
@@ -17,14 +17,14 @@ data class Movie(
     val year: Int,
     @SerializedName("cast")
     @Expose
-    val cast: List<String>,
+    val cast: List<String>? = null,
     @SerializedName("genres")
     @Expose
-    val genres: List<String>,
+    val genres: List<String>? = null,
     @SerializedName("rating")
     @Expose
     val rating: Int,
-    val imagesUrls: List<String>? = null) {
+    var imagesUrls: List<String>? = null) {
 
     fun compareByRating(other: Movie): Int {
         return when {

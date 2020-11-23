@@ -17,7 +17,7 @@ class MoviesAdapter(private var items: List<AdapterItem<Movie>>, private val lis
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = if (viewType == AdapterItem.TYPE_YEAR) {
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.view_movie, parent, false)
+                .inflate(R.layout.view_year_header, parent, false)
         } else {
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.view_movie, parent, false)
@@ -44,8 +44,13 @@ class MoviesAdapter(private var items: List<AdapterItem<Movie>>, private val lis
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMovie(movie: Movie, listener: Listener) = with(itemView) {
-            if (movie.imagesUrls?.isNotEmpty() == true)
-                Glide.with(context).load(movie.imagesUrls[0]).into(ivMoviePoster)
+
+            try {
+                Glide.with(context).load(movie.imagesUrls?.get(0))
+                    .placeholder(R.drawable.ic_movie_poster_placeholder).into(ivMoviePoster)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
             tvMovieTitle.text = movie.title
 
