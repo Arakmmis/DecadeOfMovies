@@ -52,10 +52,4 @@
         <item name="cornerSize">3%</item>
     </style>
 
-    <style name="RoundedBottomMoviePoster">
-        <item name="cornerFamilyBottomLeft">rounded</item>
-        <item name="cornerFamilyBottomRight">rounded</item>
-        <item name="cornerSizeBottomLeft">10%</item>
-        <item name="cornerSizeBottomRight">10%</item>
-    </style>
 </resources>

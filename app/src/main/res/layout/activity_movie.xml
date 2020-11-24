@@ -13,7 +13,6 @@
         tools:src="@drawable/ic_movie_poster_placeholder" />
 
     <View
-        android:id="@+id/vGradient"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_shark_to_transparent" />

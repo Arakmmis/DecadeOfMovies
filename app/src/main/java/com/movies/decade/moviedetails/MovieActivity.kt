@@ -59,7 +59,7 @@ class MovieActivity : AppCompatActivity() {
         tvMovieTitle.text = movie?.title
         tvReleaseDate.text = movie?.year?.toString()
 
-        tvRating.text = String.format("%d/10", movie?.rating)
+        tvRating.text = String.format("%d/5", movie?.rating)
     }
 
     private fun initRecyclerViews() {

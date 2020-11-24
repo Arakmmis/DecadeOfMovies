@@ -10,11 +10,8 @@ import com.movies.decade.statemodels.MoviesUiState
 import com.movies.decade.statemodels.MoviesViewModelState
 import com.movies.decade.utils.isDeviceOnline
 import com.movies.decade.utils.toAdapterList
-import org.koin.java.KoinJavaComponent.inject
 
-class MoviesListViewModel : ViewModel() {
-
-    private val moviesManager: MoviesManager by inject(MoviesManager::class.java)
+class MoviesListViewModel(private var moviesManager: MoviesManager) : ViewModel() {
 
     private var moviesList: List<AdapterItem<Movie>>? = null
 

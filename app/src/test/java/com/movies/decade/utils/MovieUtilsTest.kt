@@ -67,7 +67,7 @@ class MovieUtilsTest {
     fun `assert adapter list is greater than movie list`() {
         val initialMoviesSize = 10
         val adapterList = toAdapterList(getMovieList(initialMoviesSize))
-        assert(adapterList.size > initialMoviesSize)
+        assert(adapterList?.size?.let { it > initialMoviesSize } ?: false)
     }
 
     @Test
@@ -75,9 +75,9 @@ class MovieUtilsTest {
         val initialMoviesSize = 10
         val adapterList = toAdapterList(getMovieList(initialMoviesSize))
 
-        var currentItemType = adapterList[0].viewType
+        var currentItemType = adapterList?.get(0)?.viewType
 
-        adapterList.forEach { item ->
+        adapterList?.forEach { item ->
             if (currentItemType == AdapterItem.TYPE_YEAR) {
                 if (item.viewType == AdapterItem.TYPE_YEAR) {
                     currentItemType = -1

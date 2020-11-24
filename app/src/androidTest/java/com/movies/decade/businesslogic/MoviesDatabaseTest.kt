@@ -65,7 +65,7 @@ class MoviesDatabaseTest {
     fun getAllMoviesDescendingByYearAndRating() {
         moviesDao?.insertMovie(*getMovieList(5).toTypedArray())
 
-        val queriedMovies = moviesDao?.getAllMovies()
+        val queriedMovies = moviesDao?.getQueriedMovies("")
 
         val observer: Observer<List<Movie>> = mock()
         queriedMovies?.observeForever(observer)

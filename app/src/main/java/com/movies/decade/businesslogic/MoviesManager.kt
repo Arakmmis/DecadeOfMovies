@@ -1,6 +1,5 @@
 package com.movies.decade.businesslogic
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.movies.decade.businesslogic.models.Movie
@@ -11,12 +10,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.koin.java.KoinJavaComponent.inject
 
-class MoviesManager(context: Context) {
-
-    private val moviesDao by lazy { MoviesDatabase.getDatabase(context).moviesDao() }
-    private val moviesRepository by inject(MoviesRepository::class.java)
+class MoviesManager(var moviesDao: MoviesDao, var moviesRepository: MoviesRepository) {
 
     var viewModelState = MutableLiveData<MoviesViewModelState>()
 

@@ -2,12 +2,9 @@ package com.movies.decade.businesslogic
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.movies.decade.utils.MOVIES_FILE_NAME
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 import org.koin.java.KoinJavaComponent.inject
 
 @RunWith(AndroidJUnit4::class)
