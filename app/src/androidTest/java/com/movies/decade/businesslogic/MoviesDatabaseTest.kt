@@ -65,7 +65,7 @@ class MoviesDatabaseTest {
     fun getAllMoviesDescendingByYearAndRating() {
         moviesDao?.insertMovie(*getMovieList(5).toTypedArray())
 
-        val queriedMovies = moviesDao?.getQueriedMovies("")
+        val queriedMovies = moviesDao?.getAllMovies()
 
         val observer: Observer<List<Movie>> = mock()
         queriedMovies?.observeForever(observer)
@@ -73,7 +73,7 @@ class MoviesDatabaseTest {
         verify(observer).onChanged(queriedMovies?.value)
 
         if (queriedMovies?.value != null) {
-            val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
+            val sortedMovies = queriedMovies.value?.let { sortMovies(it).value } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
                 assert(movie == sortedMovies[index])
@@ -104,7 +104,7 @@ class MoviesDatabaseTest {
         verify(observer).onChanged(queriedMovies?.value)
 
         if (queriedMovies?.value != null) {
-            val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
+            val sortedMovies = queriedMovies.value?.let { sortMovies(it).value } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
                 assert(movie == sortedMovies[index])

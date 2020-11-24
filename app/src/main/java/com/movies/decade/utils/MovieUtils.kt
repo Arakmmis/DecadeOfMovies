@@ -1,8 +1,11 @@
 package com.movies.decade.utils
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.set
 import kotlin.random.Random
 
@@ -57,10 +60,20 @@ fun getMovieList(size: Int): List<Movie> {
     return movieList
 }
 
-fun sortMovies(movies: List<Movie>): List<Movie> {
-    if (movies.isEmpty()) return emptyList()
+fun sortMovies(movies: List<Movie>, capResults: Boolean = false): LiveData<List<Movie>> {
+    val observable = MutableLiveData<List<Movie>>()
 
-    return sortMoviesByYear(sortMoviesByRating(movies))
+    if (movies.isEmpty()) {
+        observable.value = emptyList()
+        return observable
+    }
+
+    observable.value = sortMoviesByYear(movies, capResults)
+        .mapValues { sortMoviesByRating(it.value) }
+        .flatMap { it.value }
+        .asReversed()
+
+    return observable
 }
 
 fun sortMoviesByRating(movies: List<Movie>): List<Movie> {
@@ -79,7 +92,7 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     val newList: MutableList<Movie> = mutableListOf()
 
     while (indexLeft < left.size && indexRight < right.size) {
-        if (left[indexLeft].compareByRating(right[indexRight]) == 1) {
+        if (left[indexLeft].compareByRating(right[indexRight]) == -1) {
             newList.add(left[indexLeft])
             indexLeft++
         } else {
@@ -101,36 +114,28 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
     return newList
 }
 
-fun sortMoviesByYear(movies: List<Movie>): List<Movie> {
-    val map = getMoviesByYear(movies)
-    val list = mutableListOf<Movie>()
-
-    map.forEach { entry: Map.Entry<Int, List<Movie>> ->
-        entry.value.forEach { movie -> list.add(movie) }
-    }
-
-    return list.reversed()
-}
-
-fun getMoviesByYear(movies: List<Movie>): Map<Int, ArrayList<Movie>> {
+fun sortMoviesByYear(movies: List<Movie>, capResults: Boolean = false): Map<Int, List<Movie>> {
     val yearMap = TreeMap<Int, ArrayList<Movie>>()
 
-    movies.forEach { dbMovie ->
+    movies.forEach { movie ->
         val list: ArrayList<Movie> =
-            yearMap[dbMovie.year] ?: ArrayList<Movie>()
+            yearMap[movie.year] ?: ArrayList()
 
-        if (list.size < MAX_MOVIES_PER_YEAR)
-            list.add(dbMovie)
+        if (capResults) {
+            if (list.size < MAX_MOVIES_PER_YEAR)
+                list.add(movie)
+        } else {
+            list.add(movie)
+        }
 
-        yearMap[dbMovie.year] = list
+        yearMap[movie.year] = list
     }
 
     return yearMap
 }
 
 fun toAdapterList(movies: List<Movie>?): List<AdapterItem<Movie>>? {
-    if (movies == null) return null
-    if (movies.isEmpty()) return emptyList()
+    if (movies.isNullOrEmpty()) return null
 
     val adapterList = ArrayList<AdapterItem<Movie>>()
 

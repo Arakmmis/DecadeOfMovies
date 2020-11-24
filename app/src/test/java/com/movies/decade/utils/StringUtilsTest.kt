@@ -9,7 +9,7 @@ class StringUtilsTest {
 
     @Test
     fun checkIfCallerComesBeforeComparedToReturnOne() {
-        assert(firstStr.compareAlphabeticallyTo(secondStr) == -1)
+        assert(firstStr.compareAlphabeticallyTo(secondStr) == 1)
     }
 
     @Test
@@ -19,6 +19,6 @@ class StringUtilsTest {
 
     @Test
     fun checkIfCallerComesAfterComparedToReturnNegativeOne() {
-        assert(secondStr.compareAlphabeticallyTo(firstStr) == 1)
+        assert(secondStr.compareAlphabeticallyTo(firstStr) == -1)
     }
 }

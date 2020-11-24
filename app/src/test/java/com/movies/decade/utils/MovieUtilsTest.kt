@@ -17,7 +17,7 @@ class MovieUtilsTest {
         val movies = getMovieList(10)
         val yearsSet = getDiffYears(movies)
 
-        val sortedMap = getMoviesByYear(movies)
+        val sortedMap = sortMoviesByYear(movies)
 
         assert(sortedMap.size == yearsSet.size)
 
@@ -32,7 +32,7 @@ class MovieUtilsTest {
         val yearsSet = getDiffYears(movies)
 
         sortMoviesByYear(movies).forEach {
-            assert(yearsSet.contains(it.year))
+            assert(yearsSet.contains(it.key))
         }
     }
 
@@ -47,7 +47,7 @@ class MovieUtilsTest {
     @Test
     fun `assert movies list is sorted correctly by rating`() {
         val movies = getMovieList(10)
-        val moviesSortedByRating = sortMoviesByRating(movies)
+        val moviesSortedByRating = sortMoviesByRating(movies).asReversed()
 
         assert(checkRatingOrder(moviesSortedByRating))
     }
@@ -55,7 +55,7 @@ class MovieUtilsTest {
     @Test
     fun `assert movies list is trimmed to 5 movies per year`() {
         val movies = getMovieList(20)
-        val sortedMap = getMoviesByYear(movies)
+        val sortedMap = sortMoviesByYear(movies)
 
         sortedMap.entries.forEach { entry ->
             assert(entry.value.size <= MAX_MOVIES_PER_YEAR)
