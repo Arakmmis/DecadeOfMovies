@@ -55,8 +55,7 @@ class MovieUtilsTest {
     @Test
     fun `assert movies list is trimmed to 5 movies per year`() {
         val movies = getMovieList(20)
-        val moviesByYear = getMoviesByYear(movies)
-        val sortedMap = removeExcessMoviesFromYear(moviesByYear)
+        val sortedMap = getMoviesByYear(movies)
 
         sortedMap.entries.forEach { entry ->
             assert(entry.value.size <= MAX_MOVIES_PER_YEAR)

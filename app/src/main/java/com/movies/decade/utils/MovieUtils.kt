@@ -102,7 +102,7 @@ private fun merge(left: List<Movie>, right: List<Movie>): List<Movie> {
 }
 
 fun sortMoviesByYear(movies: List<Movie>): List<Movie> {
-    val map = removeExcessMoviesFromYear(getMoviesByYear(movies))
+    val map = getMoviesByYear(movies)
     val list = mutableListOf<Movie>()
 
     map.forEach { entry: Map.Entry<Int, List<Movie>> ->
@@ -119,22 +119,13 @@ fun getMoviesByYear(movies: List<Movie>): Map<Int, ArrayList<Movie>> {
         val list: ArrayList<Movie> =
             yearMap[dbMovie.year] ?: ArrayList<Movie>()
 
-        list.add(dbMovie)
+        if (list.size < MAX_MOVIES_PER_YEAR)
+            list.add(dbMovie)
 
         yearMap[dbMovie.year] = list
     }
 
     return yearMap
-}
-
-fun removeExcessMoviesFromYear(movies: Map<Int, List<Movie>>): Map<Int, List<Movie>> {
-    val sortedMap = TreeMap<Int, List<Movie>>()
-
-    movies.entries.forEach { entry ->
-        sortedMap[entry.key] = entry.value.take(MAX_MOVIES_PER_YEAR)
-    }
-
-    return sortedMap
 }
 
 fun toAdapterList(movies: List<Movie>?): List<AdapterItem<Movie>>? {
