@@ -5,10 +5,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.moviedetails.MovieActivity
+import com.movies.decade.movieslist.adapter.MovieViewHolder
 import com.movies.decade.movieslist.adapter.MoviesAdapter
 import com.movies.decade.statemodels.MoviesUiState
 import com.movies.decade.utils.toJson
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.view_loading.*
 import kotlinx.android.synthetic.main.view_no_results.*
 import org.koin.android.ext.android.inject
 
-class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
+class MoviesListActivity : AppCompatActivity(), MovieViewHolder.Listener {
 
     private val viewModel: MoviesListViewModel by inject()
 
@@ -34,15 +36,28 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
 
     private fun subscribeToTextChanges() {
         etSearch.doAfterTextChanged { query ->
-            query?.toString()?.let { viewModel.searchMovies(query = it) }
+            query?.toString()?.let {
+                viewModel.searchMovies(query = it)
+                rvMovies.smoothScrollToPosition(0)
+            }
         }
     }
 
     private fun initRecyclerView() {
-        rvMovies.layoutManager =
-            GridLayoutManager(this, 2)
+        val layoutManager = GridLayoutManager(this, 2)
+        rvMovies.layoutManager = layoutManager
+
         adapter = MoviesAdapter(emptyList(), this)
         rvMovies.adapter = adapter
+
+        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (adapter.getItemViewType(position)) {
+                    AdapterItem.TYPE_YEAR -> 2
+                    else -> 1
+                }
+            }
+        }
     }
 
     private fun subscribeToMovies() {
@@ -52,15 +67,20 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
     }
 
     private fun render(uiState: MoviesUiState) {
+        if (uiState.movies == null && uiState.isLoading) {
+            showLoading()
+            etSearch.isEnabled = false
+            return
+        } else {
+            etSearch.isEnabled = true
+        }
+
         if (uiState.movies == null) {
             showNoResults()
             return
         }
 
-        if (!uiState.hasList)
-            showLoading()
-        else
-            showMovies(uiState.movies)
+        showMovies(uiState.movies)
     }
 
     private fun showNoResults() {
