@@ -4,23 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.movies.decade.businesslogic.MoviesManager
-import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
 import com.movies.decade.statemodels.MoviesUiState
 import com.movies.decade.statemodels.MoviesViewModelState
 import com.movies.decade.utils.isDeviceOnline
+import com.movies.decade.utils.sortMovies
 import com.movies.decade.utils.toAdapterList
 
 class MoviesListViewModel(private var moviesManager: MoviesManager) : ViewModel() {
 
-    private var moviesList: List<AdapterItem<Movie>>? = null
+    private var moviesList: List<Movie>? = null
 
     val viewState: MutableLiveData<MoviesUiState> =
         Transformations.switchMap(moviesManager.viewModelState) {
-            moviesList = toAdapterList(it.movies)
+            moviesList = it.movies
 
             val newState = MutableLiveData<MoviesUiState>()
-            newState.value = MoviesUiState(moviesList, moviesList?.isNotEmpty() == true)
+            newState.value =
+                MoviesUiState(toAdapterList(it.movies), it.movies == null)
 
             newState
         } as MutableLiveData<MoviesUiState>
@@ -31,19 +32,19 @@ class MoviesListViewModel(private var moviesManager: MoviesManager) : ViewModel(
 
     fun searchMovies(query: String) {
         if (query.isEmpty() && moviesList == null) {
-            moviesManager.search(MoviesViewModelState(query, null, isDeviceOnline()))
+            moviesManager.getMovies(MoviesViewModelState(null, isDeviceOnline()))
             return
         }
 
-        pushState(filterSearchByQuery(query))
+        pushState(sortMovies(filterSearchByQuery(query) ?: emptyList(), true).value)
     }
 
-    private fun filterSearchByQuery(query: String): List<AdapterItem<Movie>>? {
+    private fun filterSearchByQuery(query: String): List<Movie>? {
         val queriedMovies = moviesList?.filter { item ->
-            item.value.title.toLowerCase().contains(query.toLowerCase())
-                    || item.value.year.toString().toLowerCase().contains(query.toLowerCase())
-                    || isQueryInList(query, item.value.genres)
-                    || isQueryInList(query, item.value.cast)
+            item.title.toLowerCase().contains(query.toLowerCase())
+                    || item.year.toString().toLowerCase().contains(query.toLowerCase())
+                    || isQueryInList(query, item.genres)
+                    || isQueryInList(query, item.cast)
         }
 
         return if (queriedMovies.isNullOrEmpty())
@@ -56,7 +57,7 @@ class MoviesListViewModel(private var moviesManager: MoviesManager) : ViewModel(
         return list?.any { it.toLowerCase().contains(query) } ?: false
     }
 
-    private fun pushState(movies: List<AdapterItem<Movie>>?) {
-        viewState.value = MoviesUiState(movies, movies?.isNotEmpty() == true)
+    private fun pushState(movies: List<Movie>?) {
+        viewState.value = MoviesUiState(toAdapterList(movies), movies?.isNotEmpty() == true)
     }
 }
