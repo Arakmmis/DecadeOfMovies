@@ -27,7 +27,12 @@ class MoviesRepository(private val context: Context) {
 
         val listUserType: Type = object : TypeToken<RetrievedMovies>() {}.type
 
-        observable.value = (Gson().fromJson(jsonFileString, listUserType) as RetrievedMovies).movies
+        try {
+            observable.value =
+                (Gson().fromJson(jsonFileString, listUserType) as RetrievedMovies).movies
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         return observable
     }
