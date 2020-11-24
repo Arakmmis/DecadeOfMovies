@@ -14,13 +14,14 @@
         android:layout_height="210dp"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/RoundedMoviePoster"
-        tools:src="@drawable/movie_poster" />
+        android:src="@drawable/ic_movie_poster_placeholder" />
 
     <TextView
         android:id="@+id/tvMovieTitle"
         style="@style/ParagraphTextStyle"
         android:layout_width="165dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/zero"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/small_margin"
         android:ellipsize="end"

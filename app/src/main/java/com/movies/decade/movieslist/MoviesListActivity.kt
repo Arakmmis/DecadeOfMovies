@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
+import com.movies.decade.moviedetails.MovieActivity
 import com.movies.decade.movieslist.adapter.MoviesAdapter
 import com.movies.decade.statemodels.MoviesUiState
+import com.movies.decade.utils.toJson
 import kotlinx.android.synthetic.main.activity_movies_list.*
 import kotlinx.android.synthetic.main.view_loading.*
 import kotlinx.android.synthetic.main.view_no_results.*
@@ -82,6 +84,6 @@ class MoviesListActivity : AppCompatActivity(), MoviesAdapter.Listener {
     }
 
     override fun onMovieSelected(movie: Movie) {
-        TODO("Not yet implemented")
+        MovieActivity.start(this, toJson(movie))
     }
 }

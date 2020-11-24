@@ -33,8 +33,10 @@ class MoviesListViewModel : ViewModel() {
     }
 
     fun searchMovies(query: String) {
-        if (query.isEmpty() && moviesList == null)
+        if (query.isEmpty() && moviesList == null) {
             moviesManager.search(MoviesViewModelState(query, null, isDeviceOnline()))
+            return
+        }
 
         pushState(filterSearchByQuery(query))
     }

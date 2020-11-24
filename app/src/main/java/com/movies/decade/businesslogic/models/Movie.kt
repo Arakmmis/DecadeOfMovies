@@ -6,9 +6,8 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.movies.decade.utils.compareAlphabeticallyTo
 
-@Entity(tableName = "movie")
+@Entity(tableName = "movie", primaryKeys = ["title", "year"])
 data class Movie(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @SerializedName("title")
     @Expose
     val title: String,

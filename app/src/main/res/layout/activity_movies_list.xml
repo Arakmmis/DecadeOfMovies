@@ -9,7 +9,6 @@
         style="@style/HeaderTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/large_margin"
         android:layout_marginTop="@dimen/very_large_margin"
         android:text="@string/search" />
 
@@ -18,21 +17,18 @@
         style="@style/EditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginEnd="@dimen/large_margin"
+        android:layout_marginTop="@dimen/zero"
         android:hint="@string/search_hint"
         android:importantForAutofill="no"
-        android:inputType="text" />
+        android:inputType="text"
+        android:paddingStart="@dimen/zero"
+        android:paddingEnd="@dimen/zero" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMovies"
+        style="@style/MarginDefault"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginTop="@dimen/large_margin"
-        android:layout_marginEnd="@dimen/large_margin" />
+        android:layout_height="wrap_content" />
 
     <include
         layout="@layout/view_loading"

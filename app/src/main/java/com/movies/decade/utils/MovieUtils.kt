@@ -39,7 +39,6 @@ const val MAX_MOVIES_PER_YEAR = 5
 
 fun createMovie(withImages: Boolean): Movie {
     return Movie(
-        Random.nextInt(1, 100),
         dummyMovieTitles.shuffled().first(),
         Random.nextInt(1990, 2020),
         dummyMovieCast.shuffled().subList(0, Random.nextInt(1, 5)),
@@ -148,7 +147,7 @@ fun toAdapterList(movies: List<Movie>?): List<AdapterItem<Movie>>? {
 
     movies.forEach { movie ->
         if (previousYear != movie.year) {
-            val dummyMovie = Movie(0, "", movie.year, null, null, 0, null)
+            val dummyMovie = Movie("", movie.year, null, null, 0, null)
 
             val item = AdapterItem(dummyMovie, AdapterItem.TYPE_YEAR)
             adapterList.add(item)

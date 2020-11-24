@@ -76,7 +76,7 @@ class MoviesDatabaseTest {
             val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
-                assert(movie.id == sortedMovies[index].id)
+                assert(movie == sortedMovies[index])
             }
         }
     }
@@ -107,7 +107,7 @@ class MoviesDatabaseTest {
             val sortedMovies = queriedMovies.value?.let { sortMovies(it) } ?: emptyList()
 
             queriedMovies.value?.forEachIndexed { index, movie ->
-                assert(movie.id == sortedMovies[index].id)
+                assert(movie == sortedMovies[index])
             }
         }
     }

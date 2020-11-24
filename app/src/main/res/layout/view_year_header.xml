@@ -4,4 +4,7 @@
     style="@style/ParagraphTextStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/zero"
+    android:layout_marginTop="@dimen/zero"
+    android:layout_marginEnd="@dimen/zero"
     android:textSize="@dimen/large_text" />

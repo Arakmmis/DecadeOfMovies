@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.movies.decade.R
 import com.movies.decade.businesslogic.models.AdapterItem
 import com.movies.decade.businesslogic.models.Movie
+import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.view_movie.view.*
 import kotlinx.android.synthetic.main.view_year_header.view.*
 
@@ -46,11 +47,14 @@ class MoviesAdapter(private var items: List<AdapterItem<Movie>>, private val lis
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindMovie(movie: Movie, listener: Listener) = with(itemView) {
             try {
-                Glide.with(context)
-                    .load(movie.imagesUrls?.get(0))
-                    .placeholder(R.drawable.ic_movie_poster_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(ivMoviePoster)
+                if (movie.imagesUrls?.isNotEmpty() == true) {
+                    movie.imagesUrls?.get(0)?.let {
+                        Glide.with(this)
+                            .load(it)
+                            .placeholder(R.drawable.ic_movie_poster_placeholder)
+                            .into(ivMoviePoster)
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
