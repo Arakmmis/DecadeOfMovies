@@ -25,8 +25,8 @@ There are no special or additional requirements to run this project. Simply clon
 ## Breakdown of the Structure
 
 ```markdown
-- businesslogic
-  - models
+  - businesslogic
+    - models
 ```
 Contains all things that concern the data layer. Both repositories and POJOs.
 
@@ -86,17 +86,5 @@ Activities, Adapters, and ViewModels that concern the view layer.
 ## Overall Impressions
 
 This was frankly a very interesting challenge, and I've learned a lot by doing it as it was a chance for me to use all the components in it together for the first time.
-
-Thank you for your time and sorry if this was too long.
-  - One other issue was the non-availability of a CallAdapter for LiveData in Retrofit, so I had to resort to using RxJava instead.
-  
-> Initial Load Time
-  - On first launch, the app takes around 10-15s to load, which puts if the user continuously tries to use it by clicking on the screen, an ANR dialog is displayed by the system.
-  - I didn't manage to get to find a way to solve it in the remaining time that I had, but if I could have another go at it, I would start by tackling the most important bottleneck I see, which is; the requests to Flickr API to get the images for every movie upon launch.
-  - I would probably hold off on firing the requests and risk diaplaying to the user the list of movies with placeholder images to not stall the user on startup.
-  
-## Overall Impressions
-
-This was frankly a very interesting challenge, and I've learnt a lot doing it as it was a chance for me to use all the components in it together for the first time.
 
 Thank you for your time and sorry if this was too long.
