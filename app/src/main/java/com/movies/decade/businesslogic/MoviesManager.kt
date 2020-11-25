@@ -25,7 +25,7 @@ class MoviesManager(var moviesDao: MoviesDao, var moviesRepository: MoviesReposi
         } as MutableLiveData<MoviesViewModelState>
 
     fun getMovies(state: MoviesViewModelState) {
-        viewModelState.value = MoviesViewModelState( state.movies, state.loadImages)
+        viewModelState.value = MoviesViewModelState(state.movies, state.loadImages)
         subscribeToMovies()
     }
 
@@ -50,12 +50,17 @@ class MoviesManager(var moviesDao: MoviesDao, var moviesRepository: MoviesReposi
 
     private fun getMoviesFromFile() {
         moviesMediator.addSource(moviesRepository.getMoviesFromFile()) {
-            val movies = if (viewModelState.value?.loadImages == true)
-                getMoviesWithImages(it)
-            else
-                it
+            if (it.isNullOrEmpty()) {
+                viewModelState.value =
+                    MoviesViewModelState(emptyList(), viewModelState.value?.loadImages)
+            } else {
+                val movies = if (viewModelState.value?.loadImages == true)
+                    getMoviesWithImages(it)
+                else
+                    it
 
-            populateDb(movies ?: emptyList())
+                populateDb(movies)
+            }
         }
     }
 

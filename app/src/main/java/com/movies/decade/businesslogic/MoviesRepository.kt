@@ -32,6 +32,10 @@ class MoviesRepository(private val context: Context) {
                 (Gson().fromJson(jsonFileString, listUserType) as RetrievedMovies).movies
         } catch (e: Exception) {
             e.printStackTrace()
+
+            val emptyList = MutableLiveData<List<Movie>>()
+            emptyList.value = emptyList()
+            return emptyList
         }
 
         return observable
